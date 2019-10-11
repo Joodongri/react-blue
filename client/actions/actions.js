@@ -50,11 +50,12 @@ export const setCurrentComponent = (currentComponent) => (dispatch) => {
     })
 }
 
-export const setTransAndHistory = (translate, history) => (dispatch) => {
+export const setTransAndHistory = (translate, miniTranslate, history) => (dispatch) => {
     dispatch({
         type: types.SET_TRANS_AND_HISTORY,
         payload: {
             translate,
+            miniTranslate,
             history
         }
     })

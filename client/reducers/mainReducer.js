@@ -13,7 +13,8 @@ const initialState = {
     isContainer: true,
     children: []
     },
-  translate: {x: null, y: null},
+  translate: {x: 0, y: 0},
+  miniTranslate: {x: 0, y: 0},
   history: null,
   currentComponent: {
     name: 'Parent Node', 
@@ -85,7 +86,7 @@ const mainReducer = (state=initialState, action) => {
       };
       
       findComponentAndUpdate(data, currentComponent);
-      // console.log('data in update: ', data);
+      console.log('data in update: ', data);
 
       preHistory = clone(state.history);
       history = new DoublyLinkedList(clone({
@@ -121,10 +122,12 @@ const mainReducer = (state=initialState, action) => {
 
     case types.SET_TRANS_AND_HISTORY:
       const translate = action.payload.translate;
+      const miniTranslate = action.payload.miniTranslate;
       history = action.payload.history;
       return {
           ...state,
           translate,
+          miniTranslate,
           history
       }
 
