@@ -53,7 +53,6 @@ const VisualContainer =({
       return useMemo(()=>{
         return (
         <div id="visual-container">
-        {console.log('inside useMemo', data)}
           <Tree
             data={data}
             translate={translate}

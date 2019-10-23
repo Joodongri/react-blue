@@ -22,7 +22,6 @@ const ComponentDetail = ({
   const disabled = () => {
     return currentComponent.depth === 0 ? 'disabled' : '';
   };
-  // console.log('Inside of ComponentDetail.jsx')
   return (
     <React.Fragment>
       <h2>Current Component</h2>

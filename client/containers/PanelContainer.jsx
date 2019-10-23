@@ -73,16 +73,14 @@ function checkID_ClearAndSetTimeout(setTimeoutId, recentTimeoutId, state) {
   function setTimeoutAndSendToReducer(setTimeoutId, recentTimeoutId, state) {
     const tempId = setTimeout(() => {
         localStorage.setObj('nameAndCodeLinkedToComponentId', state.nameAndCodeLinkedToComponentId);
-      
         localStorage.setObj('data', state.data);
-     
         localStorage.setObj('currentComponent', state.currentComponent);
         state.history.next = null;
         state.history.prev = null;
         localStorage.setObj('history', state.history);
      
         localStorage.setObj('lastId', state.lastId);
-        console.log('SUCCESS!!!!')
+        
     }, 10000)
     setTimeoutId(tempId);
   }

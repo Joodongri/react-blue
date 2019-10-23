@@ -29,7 +29,7 @@ const childComponent2 = {
     children: []
 }
 
-const appComponentWithChild = {
+const appComponentWithOneChild = {
     name: "App",
     depth: 0,
     id: 0,
@@ -38,7 +38,7 @@ const appComponentWithChild = {
     children: [childComponent1]
 };
 
-const appComponentWithChildren = {
+const appComponentWithTwoChildren = {
     name: "App",
     depth: 0,
     id: 0,
@@ -47,86 +47,101 @@ const appComponentWithChildren = {
     children: [childComponent1, childComponent2]
 };
 
-const initialNode = new DoublyLinkedList({
+const classTemplete = {
+    name: 'Test Class Default',
+    code: 'test class code'
+}
+
+const hooksTemplate = {
+    name: 'Test Hooks Default',
+    code: 'test hooks code'
+}
+
+const initialHistory = new DoublyLinkedList({
     data: appComponent,
     translate: { x: 0, y: 0 },
     currentComponent: appComponent,
-    nameAndCodeLinkedToComponentId: {},
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete
+    },
     lastId: 0,
-    defaultNameCount: 0
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate]
 });
 
-const currentNode = new DoublyLinkedList({
-    value: new DoublyLinkedList({
-        data: appComponentWithChild,
-        translate: { x: 50, y: 50 },
-        currentComponent: appComponentWithChild,
-        nameAndCodeLinkedToComponentId: {},
-        lastId: 1,
-        defaultNameCount: 0
-    }),
-});
-
-const nextNode = new DoublyLinkedList({
-    data: appComponentWithChildren,
+const currentHistory = new DoublyLinkedList({
+    data: appComponentWithOneChild,
     translate: { x: 50, y: 50 },
-    currentComponent: appComponentWithChildren,
-    nameAndCodeLinkedToComponentId: {},
-    lastId: 2,
-    defaultNameCount: 0
+    currentComponent: appComponentWithOneChild,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate
+    },
+    lastId: 1,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate]
 });
 
-export const initialHistory = {
-    value: initialNode,
-    prev: null,
-    next: null
-}
+const nextHistory = new DoublyLinkedList({
+    data: appComponentWithTwoChildren,
+    translate: { x: 50, y: 50 },
+    currentComponent: childComponent1,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate,
+        2: hooksTemplate
+    },
+    lastId: 2,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate],
+});
 
-export const currentHistory = {
-    value: currentNode,
-    prev: initialNode,
-    next: nextNode
-}
-
-export const nextHistory = {
-    value: nextNode,
-    prev: currentNode,
-    next: null
-}
-
+initialHistory.next = currentHistory;
+currentHistory.prev = initialHistory;
+currentHistory.next = nextHistory;
+nextHistory.prev = currentHistory;
 
 export const initialStateMock = {
     data: appComponent,
     translate: { x: 0, y: 0 },
     history: initialHistory,
     currentComponent: appComponent,
-    nameAndCodeLinkedToComponentId: {},
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete
+    },
     lastId: 0,
     defaultNameCount: 0,
-    templates: [],
+    templates: [classTemplete, hooksTemplate],
     orientation: "vertical"
 };
 
-export const stateWithChildMock = {
-    data: appComponentWithChild,
+export const currentStateMock = {
+    data: appComponentWithOneChild,
     translate: { x: 50, y: 50 },
     history: currentHistory,
-    currentComponent: childComponent1,
-    nameAndCodeLinkedToComponentId: {},
+    currentComponent: appComponentWithOneChild,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate
+    },
     lastId: 1,
     defaultNameCount: 0,
-    templates: [],
+    templates: [classTemplete, hooksTemplate],
     orientation: "vertical"
 }
 
-export const stateWithChildrenMock = {
-    data: appComponentWithChildren,
+export const nextStateMock = {
+    data: appComponentWithTwoChildren,
     translate: { x: 50, y: 50 },
     history: nextHistory,
-    currentComponent: childComponent2,
-    nameAndCodeLinkedToComponentId: {},
+    currentComponent: childComponent1,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate,
+        2: hooksTemplate
+    },
     lastId: 2,
     defaultNameCount: 0,
-    templates: [],
+    templates: [classTemplete, hooksTemplate],
     orientation: "vertical"
 }

@@ -51,12 +51,10 @@ const App = ({
         "nameAndCodeLinkedToComponentId"
       );
       const currentComponent = localStorage.getObj("currentComponent");
-      // console.log(JSON.parse(JSON.stringify(data)))
       const lastId = localStorage.getObj("lastId");
       const history = localStorage.getObj('history')
       history.prev = null;
       localStorage.setObj('history', history)
-      // console.log('inside useEffect', history)
       updateStateWithLocalStorage(
         data,
         currentComponent,
@@ -80,7 +78,6 @@ const App = ({
 
   return (
     <React.Fragment>
-      {/*console.log('Inside of App.jsx')*/}
       <TopNavContainer />
       <div id='panel-main-container'>
         <PanelContainer />

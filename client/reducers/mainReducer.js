@@ -37,6 +37,8 @@ const mainReducer = (state = initialState, action) => {
     children,
     data,
     inputName,
+    translate,
+    templates,
     updatedState,
     history,
     nameAndCodeLinkedToComponentId,
@@ -46,7 +48,6 @@ const mainReducer = (state = initialState, action) => {
     case types.RENAME_COMPONENT:
       inputName = action.payload.inputName;
       currentComponent = clone(state.currentComponent);
-      c
       currentComponent.name = inputName;
       updatedState = updateTree(state, currentComponent);
 
@@ -111,29 +112,36 @@ const mainReducer = (state = initialState, action) => {
       };
 
     case types.SET_TRANS_AND_HISTORY:
-      const translate = action.payload.translate;
+      translate = action.payload.translate;
       history = action.payload.history;
       return {
         ...state,
         translate,
         history
       };
-
+      
     case types.UN_DO:
       if (state.history.prev) {
-
         history = clone(state.history.prev);
         data = clone(history.value.data);
+        translate = clone(history.value.translate);
         currentComponent = clone(history.value.currentComponent);
         nameAndCodeLinkedToComponentId = clone(
           history.value.nameAndCodeLinkedToComponentId
         );
+        lastId = history.value.lastId;
+        defaultNameCount = history.value.defaultNameCount;
+        templates = clone(history.value.templates);
         return {
           ...state,
           data,
+          translate,
           history,
           currentComponent,
-          nameAndCodeLinkedToComponentId
+          nameAndCodeLinkedToComponentId,
+          lastId,
+          defaultNameCount,
+          templates
         };
       } else {
         return {
@@ -145,16 +153,24 @@ const mainReducer = (state = initialState, action) => {
       if (state.history.next) {
         history = clone(state.history.next);
         data = clone(history.value.data);
+        translate = clone(history.value.translate);
         currentComponent = clone(history.value.currentComponent);
         nameAndCodeLinkedToComponentId = clone(
           history.value.nameAndCodeLinkedToComponentId
         );
+        lastId = history.value.lastId;
+        defaultNameCount = history.value.defaultNameCount;
+        templates = clone(history.value.templates);
         return {
           ...state,
           data,
+          translate,
           history,
           currentComponent,
-          nameAndCodeLinkedToComponentId
+          nameAndCodeLinkedToComponentId,
+          lastId,
+          defaultNameCount,
+          templates
         };
       } else {
         return {
@@ -201,7 +217,6 @@ const mainReducer = (state = initialState, action) => {
       };
 
     case types.ADD_CHILD:
-      console.time('timer add child for entirety')
       let name, defaultNameCount;
       if (action.payload.name) {
         name = action.payload.name;
@@ -221,27 +236,21 @@ const mainReducer = (state = initialState, action) => {
         isContainer,
         parent: state.currentComponent
       };
-      console.time('cloning children')
+      
       children = state.currentComponent.children
         ? state.currentComponent.children.slice()
         : [];
       children.push(newChild);
-      console.time('cloning children')
-      // console.time('clone of current Component')
       currentComponent = clone(state.currentComponent);
-      currentComponent.children = children.slice();
-      console.time('updateTree ENTIRE')
+      currentComponent.children = children.slice();   
       updatedState = updateTree(state, currentComponent);
-      console.timeEnd('updateTree ENTIRE')
-      // console.time('clone of name and code');
       nameAndCodeLinkedToComponentId = clone(
         state.nameAndCodeLinkedToComponentId
       );
-      // console.timeEnd('clone of name and code');
       nameAndCodeLinkedToComponentId[componentId] = state.templates[0];
       updatedState.history.value.nameAndCodeLinkedToComponentId[componentId] =
         state.templates[0];
-      // console.timeEnd('timer add child for entirety')
+
       return {
         ...state,
         ...updatedState,
@@ -292,6 +301,7 @@ const mainReducer = (state = initialState, action) => {
         nameAndCodeLinkedToComponentId,
         templates
       };
+
     case types.SET_TEMPLATES_FOR_COMPONENT:
       nameAndCodeLinkedToComponentId = clone(
         state.nameAndCodeLinkedToComponentId
@@ -308,6 +318,7 @@ const mainReducer = (state = initialState, action) => {
         history,
         nameAndCodeLinkedToComponentId
       };
+
     case types.ZOOM_BY_CHANGING_X_AND_Y:
       translate = Object.assign({}, state.translate);
       translate.x += action.payload.x;
@@ -316,11 +327,13 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         translate
       };
+
     case types.CHANGE_DISPLAY_HORIZONTAL_OR_VERTICAL:
       return {
         ...state,
         orientation: action.payload
       };
+
     case types.UPDATE_STATE_WITH_LOCAL_STORAGE:
       data = action.payload.data;
       currentComponent = action.payload.currentComponent;
@@ -339,6 +352,7 @@ const mainReducer = (state = initialState, action) => {
         history,
         defaultNameCount
       };
+
     case types.RESET_ENTIRE_TREE:
       localStorage.clear();
       location.reload(true);
@@ -354,11 +368,13 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         toggleFileTree: !newToggleFileTree
       };
+
     case types.SET_TIMEOUT_ID:
       return {
         ...state,
         recentTimeoutId: action.payload
       }
+
     default:
       return state;
   }
