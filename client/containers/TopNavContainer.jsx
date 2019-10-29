@@ -44,6 +44,7 @@ const TopNavContainer = ({
       return history.next ? false : true;
     }
   }
+  // console.log('inside TopNavContainer')
   return (
     <Navbar collapseOnSelect expand='lg' variant='dark'>
       <Navbar.Brand href='#home'>React Blue</Navbar.Brand>
@@ -108,9 +109,9 @@ const TopNavContainer = ({
               Export FrontEnd
             </NavDropdown.Item>
             <NavDropdown.Item
-              onClick={() =>
-                exportZipFull(data, nameAndCodeLinkedToComponentId)
-              }
+            onClick={() =>{
+            exportZipFull(data, nameAndCodeLinkedToComponentId)
+          }}
             >
               Export FullStack
             </NavDropdown.Item>

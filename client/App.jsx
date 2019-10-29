@@ -6,7 +6,8 @@ import {
   updateStateWithLocalStorage,
   undo,
   redo,
-  setCurrentComponent
+  setCurrentComponent,
+  showSubTree,
 } from "./actions/actions";
 import clone from "clone";
 import TopNavContainer from './containers/TopNavContainer.jsx';
@@ -22,7 +23,9 @@ const mapStateToProps = store => ({
   state: store.main,
   data: store.main.data,
   translate: store.main.translate,
-  orientation: store.main.orientation
+  orientation: store.main.orientation,
+  currentSubTreeDisplayToUser: store.main.currentSubTreeDisplayToUser,
+  currentlyDisplayedSubTreeId: store.main.currentlyDisplayedSubTreeId
 })
 
 const mapDispatchToProps = dispatch =>
@@ -31,7 +34,8 @@ const mapDispatchToProps = dispatch =>
     setTransAndHistory,
     undo,
     redo,
-    setCurrentComponent
+    setCurrentComponent,
+    showSubTree,
   }, dispatch
   )
 const App = ({
@@ -43,7 +47,11 @@ const App = ({
   setCurrentComponent,
   data,
   translate,
-  orientation }) => {
+  orientation,
+  currentSubTreeDisplayToUser,
+  showSubTree,
+  currentlyDisplayedSubTreeId
+}) => {
   useEffect(() => {
     let data = localStorage.getObj("data");
     if (data) {
@@ -52,15 +60,15 @@ const App = ({
       );
       const currentComponent = localStorage.getObj("currentComponent");
       const lastId = localStorage.getObj("lastId");
-      const history = localStorage.getObj('history')
-      history.prev = null;
-      localStorage.setObj('history', history)
+      const history = localStorage.getObj('history');
+      const displaySubTreeDropDown = localStorage.getObj('displaySubTreeDropDown');
       updateStateWithLocalStorage(
         data,
         currentComponent,
         nameAndCodeLinkedToComponentId,
         lastId,
-        history
+        history,
+        displaySubTreeDropDown
       );
     }
     const initialHistory = new DoublyLinkedList(clone(state));
@@ -73,9 +81,8 @@ const App = ({
       },
       initialHistory
     );
-
+    showSubTree(currentlyDisplayedSubTreeId);
   }, [])
-
   return (
     <React.Fragment>
       <TopNavContainer />
@@ -87,9 +94,12 @@ const App = ({
           setCurrentComponent={setCurrentComponent}
           data={data}
           translate={translate}
-          orientation={orientation} />
+          orientation={orientation}
+          currentSubTreeDisplayToUser={currentSubTreeDisplayToUser}
+          showSubTree={showSubTree}
+          currentlyDisplayedSubTreeId={currentlyDisplayedSubTreeId}
+        />
       </div>
-
     </React.Fragment>)
 }
 

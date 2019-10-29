@@ -1,7 +1,6 @@
 import * as types from '../constants/actionTypes';
 
 /******************************* actions for side bar ************************************/
-
 export const renameComponent = event => dispatch => {
     let inputName = event.target.value;
     inputName = inputName.replace(/(\w)(\w*)/g, (g0, g1, g2) => {
@@ -19,7 +18,6 @@ export const renameComponent = event => dispatch => {
 
 export const changeType = event => dispatch => {
     const isContainer = event.target.checked;
-
     dispatch({
         type: types.CHANGE_TYPE,
         payload: {
@@ -158,11 +156,12 @@ export const updateStateWithLocalStorage = (
     currentComponent,
     nameAndCodeLinkedToComponentId,
     lastId,
-    history
+    history,
+    displaySubTreeDropDown
 ) => dispatch => {
     dispatch({
         type: types.UPDATE_STATE_WITH_LOCAL_STORAGE,
-        payload: { data, currentComponent, nameAndCodeLinkedToComponentId, lastId, history }
+        payload: { data, currentComponent, nameAndCodeLinkedToComponentId, lastId, history, displaySubTreeDropDown }
     });
 };
 
@@ -173,16 +172,38 @@ export const resetEntireTree = () => dispatch => {
     });
 };
 
-// file tree
+// toggle file tree
 export const showFileTree = () => dispatch => {
     dispatch({
         type: types.SHOW_FILE_TREE
     });
 };
-// update id
-export const setTimeoutId = (id) => dispatch => [
+// update set timeout id 
+export const setTimeoutId = (id) => dispatch => {
     dispatch({
         type: types.SET_TIMEOUT_ID,
         payload: id
     })
-]
+}
+
+//subtree action creators
+export const showSubTree = (componentId) => dispatch => {
+    dispatch({
+        type: types.SHOW_SUBTREE,
+        payload: componentId
+    })
+}
+
+export const addOrDeleteNewSubTree = (event, componentId, name) => dispatch => {
+    const isChecked = event.target.checked;
+    dispatch({
+        type: types.ADD_OR_DELETE_NEW_SUB_TREE,
+        payload: { isChecked, componentId, name }
+    })
+}
+export const deleteSubTreeDropdownItem = (componentId) =>dispatch =>{
+    dispatch({
+        type: types.DELETE_SUBTREE_DROPDOWN_ITEM,
+        payload: componentId
+    })
+}

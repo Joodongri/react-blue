@@ -13,15 +13,19 @@ const ChildrenList = ({
   state,
   recentTimeoutId,
   setTimeoutId,
-  checkID_ClearAndSetTimeout
+  checkID_ClearAndSetTimeout,
+  showSubTree,
+  currentlyDisplayedSubTreeId,
 }) => {
-  // console.log('Inside of ChildrenList.jsx')
   return (
     <React.Fragment>
       <h3>Add Child</h3>
-      <form id='children-list-form' onSubmit={(e)=>{
-        checkID_ClearAndSetTimeout(setTimeoutId, recentTimeoutId,state)
-        addChild(e)}}>
+      <form id='children-list-form' onSubmit={(e) => {
+        addChild(e);
+        showSubTree(currentlyDisplayedSubTreeId);
+        checkID_ClearAndSetTimeout(setTimeoutId, recentTimeoutId, state);
+      }}>
+
         <input
           type='text'
           id='add-child-name'
@@ -50,11 +54,10 @@ const ChildrenList = ({
         {currentComponent.children &&
           currentComponent.children.filter((node, index) => {
             return node !== null;
-          }).map((child, idx) => {
-            // console.log('inside children list', child)
+          }).map((child, index) => {
             return childMaker(
               child,
-              idx,
+              index,
               renameChild,
               changeChildType,
               deleteChild,
@@ -64,7 +67,9 @@ const ChildrenList = ({
               state,
               recentTimeoutId,
               setTimeoutId,
-              checkID_ClearAndSetTimeout
+              checkID_ClearAndSetTimeout,
+              showSubTree,
+              currentlyDisplayedSubTreeId
             )
           }
           )}
@@ -72,9 +77,10 @@ const ChildrenList = ({
     </React.Fragment>
   );
 };
+
 const childMaker = (
   child,
-  idx,
+  index,
   renameChild,
   changeChildType,
   deleteChild,
@@ -84,13 +90,15 @@ const childMaker = (
   state,
   recentTimeoutId,
   setTimeoutId,
-  checkID_ClearAndSetTimeout
+  checkID_ClearAndSetTimeout,
+  showSubTree,
+  currentlyDisplayedSubTreeId
 ) => {
   return (
-    <div key={idx} className='each-child-container'>
+    <div key={`EachChild${index}`} className='each-child-container'>
       {/*console.log('Inside of childMaker function inside of ChildrenList.jsx')*/}
       <EachChild
-        key={idx}
+        key={index}
         name={child.name}
         childId={child.componentId}
         isContainer={child.isContainer}
@@ -101,6 +109,8 @@ const childMaker = (
         recentTimeoutId={recentTimeoutId}
         setTimeoutId={setTimeoutId}
         checkID_ClearAndSetTimeout={checkID_ClearAndSetTimeout}
+        showSubTree={showSubTree}
+        currentlyDisplayedSubTreeId={currentlyDisplayedSubTreeId}
       />
       <TemplateDropdown
         currentComponent={child}
@@ -111,8 +121,12 @@ const childMaker = (
         recentTimeoutId={recentTimeoutId}
         setTimeoutId={setTimeoutId}
         checkID_ClearAndSetTimeout={checkID_ClearAndSetTimeout}
+        showSubTree={showSubTree}
+        currentlyDisplayedSubTreeId={currentlyDisplayedSubTreeId}
       />
     </div>
   );
 };
+
 export default ChildrenList;
+
