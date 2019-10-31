@@ -110,8 +110,8 @@ const TopNavContainer = ({
             </NavDropdown.Item>
             <NavDropdown.Item
             onClick={() =>{
-            exportZipFull(data, nameAndCodeLinkedToComponentId)
-          }}
+              exportZipFull(data, nameAndCodeLinkedToComponentId)
+            }}
             >
               Export FullStack
             </NavDropdown.Item>
