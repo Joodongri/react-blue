@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+/**
+ * Routes for React Router
+ */
 const PanelNavIcons = () => {
   return (
     <nav id='panel-nav-icons'>
@@ -8,7 +10,10 @@ const PanelNavIcons = () => {
         <i className='fas fa-sitemap'></i>
       </Link>
       <Link to='/templates'>
-        <i className='fas fa-code'></i>
+        <i className='fa fa-file-code'></i>
+      </Link>
+      <Link to='/subTree'>
+        <i className='fas fa-search-plus'></i>
       </Link>
     </nav>
   );

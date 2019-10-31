@@ -1,3 +1,5 @@
+import { DoublyLinkedList } from '../client/reducers/utils/updateTree'
+
 const appComponent = {
     name: "App",
     depth: 0,
@@ -27,8 +29,16 @@ const childComponent2 = {
     children: []
 }
 
+const appComponentWithOneChild = {
+    name: "App",
+    depth: 0,
+    id: 0,
+    componentId: 0,
+    isContainer: true,
+    children: [childComponent1]
+};
 
-const appComponentWithChild = {
+const appComponentWithTwoChildren = {
     name: "App",
     depth: 0,
     id: 0,
@@ -37,34 +47,101 @@ const appComponentWithChild = {
     children: [childComponent1, childComponent2]
 };
 
+const classTemplete = {
+    name: 'Test Class Default',
+    code: 'test class code'
+}
+
+const hooksTemplate = {
+    name: 'Test Hooks Default',
+    code: 'test hooks code'
+}
+
+const initialHistory = new DoublyLinkedList({
+    data: appComponent,
+    translate: { x: 0, y: 0 },
+    currentComponent: appComponent,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete
+    },
+    lastId: 0,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate]
+});
+
+const currentHistory = new DoublyLinkedList({
+    data: appComponentWithOneChild,
+    translate: { x: 50, y: 50 },
+    currentComponent: appComponentWithOneChild,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate
+    },
+    lastId: 1,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate]
+});
+
+const nextHistory = new DoublyLinkedList({
+    data: appComponentWithTwoChildren,
+    translate: { x: 50, y: 50 },
+    currentComponent: childComponent1,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate,
+        2: hooksTemplate
+    },
+    lastId: 2,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate],
+});
+
+initialHistory.next = currentHistory;
+currentHistory.prev = initialHistory;
+currentHistory.next = nextHistory;
+nextHistory.prev = currentHistory;
+
 export const initialStateMock = {
     data: appComponent,
     translate: { x: 0, y: 0 },
-    history: {
-        value: appComponent,
-        prev: null,
-        next: null
-    },
+    history: initialHistory,
     currentComponent: appComponent,
-    nameAndCodeLinkedToComponentId: {},
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete
+    },
     lastId: 0,
     defaultNameCount: 0,
-    templates: [],
+    templates: [classTemplete, hooksTemplate],
     orientation: "vertical"
 };
 
-export const stateWithChildMock = {
-    data: appComponentWithChild,
-    translate: { x: 0, y: 0 },
-    history: {
-        value: appComponentWithChild,
-        prev: appComponent,
-        next: null
+export const currentStateMock = {
+    data: appComponentWithOneChild,
+    translate: { x: 50, y: 50 },
+    history: currentHistory,
+    currentComponent: appComponentWithOneChild,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate
     },
-    currentComponent: childComponent1,
-    nameAndCodeLinkedToComponentId: {},
-    lastId: 0,
+    lastId: 1,
     defaultNameCount: 0,
-    templates: [],
+    templates: [classTemplete, hooksTemplate],
+    orientation: "vertical"
+}
+
+export const nextStateMock = {
+    data: appComponentWithTwoChildren,
+    translate: { x: 50, y: 50 },
+    history: nextHistory,
+    currentComponent: childComponent1,
+    nameAndCodeLinkedToComponentId: {
+        0: classTemplete, 
+        1: hooksTemplate,
+        2: hooksTemplate
+    },
+    lastId: 2,
+    defaultNameCount: 0,
+    templates: [classTemplete, hooksTemplate],
     orientation: "vertical"
 }

@@ -1,7 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import JSZip from 'jszip';
-import FileSave from 'file-saver';
 import { bindActionCreators } from 'redux';
 import {
   undo,
@@ -17,23 +15,39 @@ import exportZipFull from '../templates-exports/fullStackFiles.js';
 
 const mapStateToProps = store => ({
   data: store.main.data,
+  history: store.main.history,
   nameAndCodeLinkedToComponentId: store.main.nameAndCodeLinkedToComponentId
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    { undo, redo, changeDisplayHorizontalToVertical, resetEntireTree },
-    dispatch
-  );
+  bindActionCreators({ 
+    undo, 
+    redo, 
+    changeDisplayHorizontalToVertical, 
+    resetEntireTree 
+  },
+  dispatch
+);
 
 const TopNavContainer = ({
   data,
   nameAndCodeLinkedToComponentId,
+  history,
   undo,
   redo,
   changeDisplayHorizontalToVertical,
   resetEntireTree
 }) => {
+  let undoDisabled = () => false;
+  let redoDisabled = () => false;
+  if (history) {
+    undoDisabled = () => {
+      return history.prev ? false : true;
+    }
+    redoDisabled = () => {
+      return history.next ? false : true;
+    }
+  }
   return (
     <Navbar collapseOnSelect expand='lg' variant='dark'>
       <Navbar.Brand href='#home'>React Blue</Navbar.Brand>
@@ -41,11 +55,11 @@ const TopNavContainer = ({
       <Navbar.Collapse id='responsive-navbar-nav'>
         <Nav className='mr-auto'>
           <NavDropdown title='Edit' id='collasible-nav-dropdown'>
-            <NavDropdown.Item className='keyboard-shortcut' onClick={undo}>
+            <NavDropdown.Item className='keyboard-shortcut' onClick={undo} disabled={undoDisabled()}>
               <span>Undo</span>
               <span>Ctrl+Z</span>
             </NavDropdown.Item>
-            <NavDropdown.Item className='keyboard-shortcut' onClick={redo}>
+            <NavDropdown.Item className='keyboard-shortcut' onClick={redo} disabled={redoDisabled()}>
               <span>Redo</span>
               <span>Ctrl+Shift+Z</span>
             </NavDropdown.Item>
@@ -98,9 +112,9 @@ const TopNavContainer = ({
               Export FrontEnd
             </NavDropdown.Item>
             <NavDropdown.Item
-              onClick={() =>
+              onClick={() => {
                 exportZipFull(data, nameAndCodeLinkedToComponentId)
-              }
+              }}
             >
               Export FullStack
             </NavDropdown.Item>
